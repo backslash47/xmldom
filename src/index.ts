@@ -1,0 +1,48 @@
+export { XMLSerializerImpl } from './serializer/xml-serializer';
+export { DOMImplementationImpl } from './dom-implementation';
+export { DOMParserImpl } from './parser/dom-parser';
+export { NodeImpl } from './node';
+export { ElementImpl } from './element';
+export { AttrImpl } from './attr';
+export { CDATASectionImpl } from './cdata-section';
+export { DocumentFragmentImpl } from './document-fragment';
+export { CommentImpl } from './comment';
+export { DocumentTypeImpl } from './document-type';
+export { DocumentImpl } from './document';
+export { NamedNodeMapImpl } from './named-node-map';
+export { NodeListImpl } from './node-list';
+export { ProcessingInstructionImpl } from './processing-instruction';
+export { TextImpl } from './text';
+
+import { XMLSerializerImpl } from './serializer/xml-serializer';
+import { DOMImplementationImpl } from './dom-implementation';
+import { DOMParserImpl } from './parser/dom-parser';
+import { NodeImpl } from './node';
+import { ElementImpl } from './element';
+import { AttrImpl } from './attr';
+import { CDATASectionImpl } from './cdata-section';
+import { CommentImpl } from './comment';
+import { DocumentFragmentImpl } from './document-fragment';
+import { DocumentTypeImpl } from './document-type';
+import { DocumentImpl } from './document';
+import { NamedNodeMapImpl } from './named-node-map';
+import { NodeListImpl } from './node-list';
+import { ProcessingInstructionImpl } from './processing-instruction';
+import { TextImpl } from './text';
+
+globalThis.XMLSerializer = XMLSerializerImpl;
+globalThis.DOMImplementation = DOMImplementationImpl;
+globalThis.DOMParser = DOMParserImpl;
+
+globalThis.Attr = AttrImpl;
+globalThis.CDATASection = CDATASectionImpl;
+globalThis.Comment = CommentImpl;
+globalThis.DocumentFragment = DocumentFragmentImpl;
+globalThis.DocumentType = DocumentTypeImpl;
+globalThis.Document = DocumentImpl;
+globalThis.Element = ElementImpl;
+globalThis.NamedNodeMap = NamedNodeMapImpl;
+globalThis.NodeList = NodeListImpl;
+globalThis.Node = NodeImpl;
+globalThis.ProcessingInstruction = ProcessingInstructionImpl;
+globalThis.Text = TextImpl;

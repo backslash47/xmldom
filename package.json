@@ -1,0 +1,80 @@
+{
+  "name": "xmldom-ts",
+  "version": "0.2.0",
+  "description": "A W3C Standard XML DOM(Level2 CORE) implementation and parser(DOMParser/XMLSerializer) in Typescript.",
+  "homepage": "https://github.com/backslash47/xmldom",
+  "author": {
+    "name": "jindw <jindw@xidea.org>",
+    "url": "http://www.xidea.org"
+  },
+  "license": "MIT",
+  "keywords": [
+    "w3c",
+    "dom",
+    "xml",
+    "parser",
+    "javascript",
+    "DOMParser",
+    "XMLSerializer"
+  ],
+  "contributors": [
+    {
+      "name": "Yaron Naveh",
+      "email": "yaronn01@gmail.com",
+      "web": "http://webservices20.blogspot.com/"
+    },
+    {
+      "name": "Harutyun Amirjanyan",
+      "email": "amirjanyan@gmail.com",
+      "web": "https://github.com/nightwing"
+    },
+    {
+      "name": "Alan Gutierrez",
+      "email": "alan@prettyrobots.com",
+      "web": "http://www.prettyrobots.com/"
+    },
+    {
+      "name": "Matus Zamborsky",
+      "email": "zamborsky@gmail.com",
+      "url": "https://github.com/backslash47"
+    }
+  ],
+  "maintainers": [
+    {
+      "name": "Matus Zamborsky",
+      "email": "zamborsky@gmail.com",
+      "url": "https://github.com/backslash47"
+    }
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.12.0",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "tslint-eslint-rules": "^5.3.1",
+    "tslint-no-circular-imports": "^0.4.0",
+    "typescript": "^3.4.0"
+  },
+  "main": "./dist/lib/index.js",
+  "types": "./dist/types/index.d.ts",
+  "scripts": {
+    "test": "mocha --require ts-node/register test/**/*.ts",
+    "lint": "tslint --project ./",
+    "build": "tsc",
+    "prepublishOnly": "npm run lint && npm run build && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/backslash47/xmldom"
+  },
+  "engines": {
+    "node": ">=0.1"
+  },
+  "bugs": {
+    "url": "http://github.com/backslash47/xmldom/issues"
+  }
+}
