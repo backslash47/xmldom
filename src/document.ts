@@ -1,21 +1,21 @@
 import './types';
-import { DummyDocument } from './dummy/dummy-document';
-import { DocumentFragmentImpl } from './document-fragment';
-import { ElementImpl } from './element';
-import { NamedNodeMapImpl } from './named-node-map';
-import { TextImpl } from './text';
-import { CommentImpl } from './comment';
-import { CDATASectionImpl } from './cdata-section';
-import { ProcessingInstructionImpl } from './processing-instruction';
-import { AttrImpl } from './attr';
-import { EntityReferenceImpl } from './entity-reference';
-import { NodeTypeTS } from './node-types';
-import { isDocumentFragment, isElement, asHTMLElement, asChildNode } from './utils';
 
+import { AttrImpl } from './attr';
+import { CDATASectionImpl } from './cdata-section';
+import { CommentImpl } from './comment';
+import { DocumentFragmentImpl } from './document-fragment';
 import { _insertBefore, _removeChild, _visitNode, importNode } from './document-utils';
-import { MutableChildNode } from './types';
-import { NodeListOfImpl } from './node-list-of';
+import { DummyDocument } from './dummy/dummy-document';
+import { ElementImpl } from './element';
+import { EntityReferenceImpl } from './entity-reference';
 import { LiveNodeListImpl } from './live-node-list';
+import { NamedNodeMapImpl } from './named-node-map';
+import { NodeListOfImpl } from './node-list-of';
+import { NodeTypeTS } from './node-types';
+import { ProcessingInstructionImpl } from './processing-instruction';
+import { TextImpl } from './text';
+import { MutableChildNode } from './types';
+import { asChildNode, asHTMLElement, isDocumentFragment, isElement } from './utils';
 
 export class DocumentImpl extends DummyDocument {
   implementation: DOMImplementation;
@@ -32,7 +32,7 @@ export class DocumentImpl extends DummyDocument {
   }
 
   insertBefore<T extends Node>(newChild: T, refChild: Node | null): T {
-    //raises
+    // raises
     if (isDocumentFragment(newChild)) {
       let child = newChild.firstChild;
       while (child) {
@@ -66,9 +66,9 @@ export class DocumentImpl extends DummyDocument {
   // Introduced in DOM Level 2:
   getElementById(id: string) {
     let rtv: Element | null = null;
-    _visitNode(this.documentElement, function(node: Node) {
+    _visitNode(this.documentElement, (node: Node) => {
       if (isElement(node)) {
-        if (node.getAttribute('id') == id) {
+        if (node.getAttribute('id') === id) {
           rtv = node;
           return true;
         }
@@ -78,11 +78,11 @@ export class DocumentImpl extends DummyDocument {
   }
 
   getElementsByTagName(tagName: string): any {
-    return new LiveNodeListImpl<Element>(this, function(base) {
-      let ls: Element[] = [];
+    return new LiveNodeListImpl<Element>(this, (base) => {
+      const ls: Element[] = [];
 
-      _visitNode(base, function(node) {
-        if (node !== base && isElement(node) && (tagName === '*' || node.tagName == tagName)) {
+      _visitNode(base, (node) => {
+        if (node !== base && isElement(node) && (tagName === '*' || node.tagName === tagName)) {
           ls.push(node);
         }
       });
@@ -91,14 +91,14 @@ export class DocumentImpl extends DummyDocument {
   }
 
   getElementsByTagNameNS(namespaceURI: string, localName: string): any {
-    return new LiveNodeListImpl<Element>(this, function(base) {
-      let ls: Element[] = [];
-      _visitNode(base, function(node) {
+    return new LiveNodeListImpl<Element>(this, (base) => {
+      const ls: Element[] = [];
+      _visitNode(base, (node) => {
         if (
           node !== base &&
           isElement(node) &&
           (namespaceURI === '*' || node.namespaceURI === namespaceURI) &&
-          (localName === '*' || node.localName == localName)
+          (localName === '*' || node.localName === localName)
         ) {
           ls.push(node);
         }
@@ -107,7 +107,7 @@ export class DocumentImpl extends DummyDocument {
     });
   }
 
-  //document factory method:
+  // document factory method:
   createElement(tagName: string) {
     const node = new ElementImpl();
     node.ownerDocument = this;
@@ -176,11 +176,11 @@ export class DocumentImpl extends DummyDocument {
     node.nodeName = qualifiedName;
     node.tagName = qualifiedName;
     node.namespaceURI = namespaceURI;
-    if (pl.length == 2) {
+    if (pl.length === 2) {
       node.prefix = pl[0];
       node.localName = pl[1];
     } else {
-      //el.prefix = null;
+      // el.prefix = null;
       node.localName = qualifiedName;
     }
     attrs._ownerElement = node;
@@ -195,11 +195,11 @@ export class DocumentImpl extends DummyDocument {
     node.name = qualifiedName;
     node.namespaceURI = namespaceURI;
     node.specified = true;
-    if (pl.length == 2) {
+    if (pl.length === 2) {
       node.prefix = pl[0];
       node.localName = pl[1];
     } else {
-      //el.prefix = null;
+      // el.prefix = null;
       node.localName = qualifiedName;
     }
     return node;

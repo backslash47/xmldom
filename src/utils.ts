@@ -1,4 +1,5 @@
 import './types';
+
 import { NodeTypeTS } from './node-types';
 
 export function isDocumentFragment(node: Node | null): node is DocumentFragment {
@@ -52,8 +53,8 @@ export function isCharacterData(node: Node | null): node is CharacterData {
 }
 
 export function copy(src: Record<string, any>, dest: Record<string, any>) {
-  for (const p in src) {
-    dest[p] = src[p];
+  for (const field of Object.keys(src)) {
+    dest[field] = src[field];
   }
 }
 

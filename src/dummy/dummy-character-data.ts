@@ -1,4 +1,5 @@
 import '../types';
+
 import { NodeImpl } from '../node';
 
 export abstract class DummyCharacterData extends NodeImpl implements CharacterData {

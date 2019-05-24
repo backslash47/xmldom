@@ -1,5 +1,6 @@
 import './types';
-import { _onRemoveAttribute, _onAddAttribute } from './document-utils';
+
+import { _onAddAttribute, _onRemoveAttribute } from './document-utils';
 import { DOMExceptionImpl } from './dom-exception';
 import { MutableAttr } from './types';
 
@@ -25,14 +26,16 @@ export function _addNamedNode(el: Element, list: Attr[], newAttr: MutableAttr, o
     newAttr.ownerElement = el;
     const doc = el.ownerDocument;
     if (doc) {
-      oldAttr && _onRemoveAttribute(doc, el, oldAttr);
+      if (oldAttr) {
+        _onRemoveAttribute(doc, el, oldAttr);
+      }
       _onAddAttribute(doc, el, newAttr);
     }
   }
 }
 
 export function _removeNamedNode(el: Element, list: Attr[], attr: MutableAttr) {
-  //console.log('remove attr:'+attr)
+  // console.log('remove attr:'+attr)
   let i = _findNodeIndex(list, attr);
   if (i >= 0) {
     const lastIndex = list.length - 1;

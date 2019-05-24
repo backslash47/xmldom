@@ -1,39 +1,42 @@
 import './types';
-import { NodeTypeTS } from './node-types';
+
 import { _insertBefore, _removeChild } from './document-utils';
-import { isDocument, isText, isElement, isDocumentFragment, isAttr, asChildNode } from './utils';
-import { getTextContent, cloneNode } from './node-utils';
-import { serializeToString } from './serializer/serialize';
 import { DummyNode } from './dummy/dummy-node';
-import { VisibleNamespaces, NodeFilterTS } from './types';
+import { NodeTypeTS } from './node-types';
+import { cloneNode, getTextContent } from './node-utils';
+import { serializeToString } from './serializer/serialize';
+import { NodeFilterTS, VisibleNamespaces } from './types';
+import { asChildNode, isAttr, isDocument, isDocumentFragment, isElement, isText } from './utils';
 
 /**
  * @see http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/core.html#ID-1950641247
  */
 export class NodeImpl extends DummyNode {
   static readonly ELEMENT_NODE = NodeTypeTS.ELEMENT_NODE;
-  readonly ELEMENT_NODE = NodeTypeTS.ELEMENT_NODE;
   static readonly ATTRIBUTE_NODE = NodeTypeTS.ATTRIBUTE_NODE;
-  readonly ATTRIBUTE_NODE = NodeTypeTS.ATTRIBUTE_NODE;
   static readonly TEXT_NODE = NodeTypeTS.TEXT_NODE;
-  readonly TEXT_NODE = NodeTypeTS.TEXT_NODE;
   static readonly CDATA_SECTION_NODE = NodeTypeTS.CDATA_SECTION_NODE;
-  readonly CDATA_SECTION_NODE = NodeTypeTS.CDATA_SECTION_NODE;
   static readonly ENTITY_REFERENCE_NODE = NodeTypeTS.ENTITY_REFERENCE_NODE;
-  readonly ENTITY_REFERENCE_NODE = NodeTypeTS.ENTITY_REFERENCE_NODE;
   static readonly ENTITY_NODE = NodeTypeTS.ENTITY_NODE;
-  readonly ENTITY_NODE = NodeTypeTS.ENTITY_NODE;
+
   static readonly PROCESSING_INSTRUCTION_NODE = NodeTypeTS.PROCESSING_INSTRUCTION_NODE;
-  readonly PROCESSING_INSTRUCTION_NODE = NodeTypeTS.PROCESSING_INSTRUCTION_NODE;
   static readonly COMMENT_NODE = NodeTypeTS.COMMENT_NODE;
-  readonly COMMENT_NODE = NodeTypeTS.COMMENT_NODE;
   static readonly DOCUMENT_NODE = NodeTypeTS.DOCUMENT_NODE;
-  readonly DOCUMENT_NODE = NodeTypeTS.DOCUMENT_NODE;
   static readonly DOCUMENT_TYPE_NODE = NodeTypeTS.DOCUMENT_TYPE_NODE;
-  readonly DOCUMENT_TYPE_NODE = NodeTypeTS.DOCUMENT_TYPE_NODE;
   static readonly DOCUMENT_FRAGMENT_NODE = NodeTypeTS.DOCUMENT_FRAGMENT_NODE;
-  readonly DOCUMENT_FRAGMENT_NODE = NodeTypeTS.DOCUMENT_FRAGMENT_NODE;
   static readonly NOTATION_NODE = NodeTypeTS.NOTATION_NODE;
+
+  readonly ELEMENT_NODE = NodeTypeTS.ELEMENT_NODE;
+  readonly ATTRIBUTE_NODE = NodeTypeTS.ATTRIBUTE_NODE;
+  readonly TEXT_NODE = NodeTypeTS.TEXT_NODE;
+  readonly CDATA_SECTION_NODE = NodeTypeTS.CDATA_SECTION_NODE;
+  readonly ENTITY_REFERENCE_NODE = NodeTypeTS.ENTITY_REFERENCE_NODE;
+  readonly ENTITY_NODE = NodeTypeTS.ENTITY_NODE;
+  readonly PROCESSING_INSTRUCTION_NODE = NodeTypeTS.PROCESSING_INSTRUCTION_NODE;
+  readonly COMMENT_NODE = NodeTypeTS.COMMENT_NODE;
+  readonly DOCUMENT_NODE = NodeTypeTS.DOCUMENT_NODE;
+  readonly DOCUMENT_TYPE_NODE = NodeTypeTS.DOCUMENT_TYPE_NODE;
+  readonly DOCUMENT_FRAGMENT_NODE = NodeTypeTS.DOCUMENT_FRAGMENT_NODE;
   readonly NOTATION_NODE = NodeTypeTS.NOTATION_NODE;
 
   nodeType: number;
@@ -58,11 +61,11 @@ export class NodeImpl extends DummyNode {
 
   // Modified in DOM Level 2:
   insertBefore<T extends Node>(newChild: T, refChild: Node | null): T {
-    //raises
+    // raises
     return _insertBefore(this, asChildNode(newChild), refChild == null ? null : asChildNode(refChild));
   }
   replaceChild<T extends Node>(newChild: Node, oldChild: T): T {
-    //raises
+    // raises
     this.insertBefore(newChild, oldChild);
     return this.removeChild(oldChild);
   }
@@ -113,9 +116,9 @@ export class NodeImpl extends DummyNode {
     while (el) {
       if (isElement(el)) {
         const map = el._nsMap;
-        //console.dir(map)
+        // console.dir(map)
         if (map) {
-          for (let n in map) {
+          for (const n in map) {
             if (map[n] === namespaceURI) {
               return n;
             }
@@ -133,7 +136,7 @@ export class NodeImpl extends DummyNode {
     while (el) {
       if (isElement(el)) {
         const map = el._nsMap;
-        //console.dir(map)
+        // console.dir(map)
         if (map) {
           if (prefix in map) {
             return map[prefix];
@@ -160,18 +163,18 @@ export class NodeImpl extends DummyNode {
     let visibleNamespaces: VisibleNamespaces | undefined;
 
     if (uri && prefix == null) {
-      //console.log(prefix)
+      // console.log(prefix)
       prefix = refNode.lookupPrefix(uri);
       if (prefix == null) {
-        //isHTML = true;
+        // isHTML = true;
         visibleNamespaces = [
           { namespace: uri, prefix: null },
-          //{namespace:uri,prefix:''}
+          // {namespace:uri,prefix:''}
         ];
       }
     }
     serializeToString(this, buf, isHtml, nodeFilter, visibleNamespaces);
-    //console.log('###',this.nodeType,uri,prefix,buf.join(''))
+    // console.log('###',this.nodeType,uri,prefix,buf.join(''))
     return buf.join('');
   }
 

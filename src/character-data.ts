@@ -1,6 +1,7 @@
-import { DummyCharacterData } from './dummy/dummy-character-data';
-import { DOMExceptionImpl } from './dom-exception';
 import './types';
+
+import { DOMExceptionImpl } from './dom-exception';
+import { DummyCharacterData } from './dummy/dummy-character-data';
 
 export class CharacterDataImpl extends DummyCharacterData {
   data: string = '';

@@ -1,7 +1,8 @@
 import './types';
+
+import { _onAddAttribute, _onRemoveAttribute } from './document-utils';
 import { DOMExceptionImpl } from './dom-exception';
-import { _onRemoveAttribute, _onAddAttribute } from './document-utils';
-import { _removeNamedNode, _addNamedNode } from './named-node-map-utils';
+import { _addNamedNode, _removeNamedNode } from './named-node-map-utils';
 
 /**
  *
@@ -23,15 +24,15 @@ export class NamedNodeMapImpl extends Array<Attr> implements NamedNodeMap {
   }
 
   getNamedItem(key: string) {
-    //		if(key.indexOf(':')>0 || key == 'xmlns'){
-    //			return null;
-    //		}
-    //console.log()
+    // if(key.indexOf(':')>0 || key == 'xmlns'){
+    //   return null;
+    // }
+    // console.log()
     let i = this.length;
     while (i--) {
       const attr = this[i];
-      //console.log(attr.nodeName,key)
-      if (attr.nodeName == key) {
+      // console.log(attr.nodeName,key)
+      if (attr.nodeName === key) {
         return attr;
       }
     }
@@ -41,7 +42,7 @@ export class NamedNodeMapImpl extends Array<Attr> implements NamedNodeMap {
 
   setNamedItem(attr: Attr) {
     const el = attr.ownerElement;
-    if (el && el != this._ownerElement) {
+    if (el && el !== this._ownerElement) {
       throw new DOMExceptionImpl(DOMExceptionImpl.INUSE_ATTRIBUTE_ERR);
     }
     const oldAttr = this.getNamedItem(attr.nodeName);
@@ -54,7 +55,7 @@ export class NamedNodeMapImpl extends Array<Attr> implements NamedNodeMap {
     // raises: WRONG_DOCUMENT_ERR,NO_MODIFICATION_ALLOWED_ERR,INUSE_ATTRIBUTE_ERR
     const el = attr.ownerElement;
     let oldAttr: Attr | null;
-    if (el && el != this._ownerElement) {
+    if (el && el !== this._ownerElement) {
       throw new DOMExceptionImpl(DOMExceptionImpl.INUSE_ATTRIBUTE_ERR);
     }
     oldAttr = this.getNamedItemNS(attr.namespaceURI, attr.localName);
@@ -74,7 +75,7 @@ export class NamedNodeMapImpl extends Array<Attr> implements NamedNodeMap {
     return attr;
   } // raises: NOT_FOUND_ERR,NO_MODIFICATION_ALLOWED_ERR
 
-  //for level2
+  // for level2
   removeNamedItemNS(namespaceURI: string, localName: string) {
     const attr = this.getNamedItemNS(namespaceURI, localName);
 
@@ -88,8 +89,8 @@ export class NamedNodeMapImpl extends Array<Attr> implements NamedNodeMap {
   getNamedItemNS(namespaceURI: string | null, localName: string) {
     let i = this.length;
     while (i--) {
-      let node = this[i];
-      if (node.localName == localName && node.namespaceURI == namespaceURI) {
+      const node = this[i];
+      if (node.localName === localName && node.namespaceURI === namespaceURI) {
         return node;
       }
     }

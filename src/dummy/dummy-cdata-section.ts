@@ -1,4 +1,5 @@
 import '../types';
+
 import { CharacterDataImpl } from '../character-data';
 
 export class DummyCDATASection extends CharacterDataImpl implements CDATASection {

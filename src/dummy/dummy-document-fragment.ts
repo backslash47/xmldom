@@ -1,4 +1,5 @@
 import '../types';
+
 import { NodeImpl } from '../node';
 
 export class DummyDocumentFragment extends NodeImpl implements DocumentFragment {

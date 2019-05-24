@@ -1,6 +1,7 @@
 import './types';
-import { isDocumentFragment, isDocument, isElement, isAttr } from './utils';
-import { MutableNode, MutableChildNode, Mutable } from './types';
+
+import { Mutable, MutableChildNode, MutableNode } from './types';
+import { isAttr, isDocument, isDocumentFragment, isElement } from './utils';
 
 /**
  * @param callback return true for continue,false for break
@@ -12,40 +13,48 @@ export function _visitNode(n: Node, callback: (node: Node) => boolean | undefine
   if (callback(node)) {
     return true;
   }
-  if ((node = node.firstChild)) {
-    do {
-      if (_visitNode(node, callback)) {
-        return true;
-      }
-    } while ((node = node.nextSibling));
+
+  node = node.firstChild;
+
+  while (node !== null) {
+    if (_visitNode(node, callback)) {
+      return true;
+    }
+    node = node.nextSibling;
   }
 }
 
 export function _onAddAttribute(doc: Document, el: Element, newAttr: Attr) {
-  doc && doc._inc++;
+  if (doc) {
+    doc._inc++;
+  }
+
   const ns = newAttr.namespaceURI;
-  if (ns == 'http://www.w3.org/2000/xmlns/') {
-    //update namespace
+  if (ns === 'http://www.w3.org/2000/xmlns/') {
+    // update namespace
     el._nsMap[newAttr.prefix ? newAttr.localName : ''] = newAttr.value;
   }
 }
 export function _onRemoveAttribute(doc: Document, el: Element, newAttr: Attr, _remove?: any) {
-  doc && doc._inc++;
+  if (doc) {
+    doc._inc++;
+  }
+
   const ns = newAttr.namespaceURI;
-  if (ns == 'http://www.w3.org/2000/xmlns/') {
-    //update namespace
+  if (ns === 'http://www.w3.org/2000/xmlns/') {
+    // update namespace
     delete el._nsMap[newAttr.prefix ? newAttr.localName : ''];
   }
 }
 export function _onUpdateChild(doc: Document | null, el: Node, newChild?: ChildNode) {
   if (doc && doc._inc) {
     doc._inc++;
-    //update childNodes
+    // update childNodes
     const cs = el.childNodes;
     if (newChild) {
       cs[cs.length++] = newChild;
     } else {
-      //console.log(1)
+      // console.log(1)
       let child = el.firstChild;
       let i = 0;
       while (child) {
@@ -91,7 +100,7 @@ export function _insertBefore<T extends MutableChildNode>(
 ): T {
   const cp = newChild.parentNode;
   if (cp) {
-    cp.removeChild(newChild); //remove and update
+    cp.removeChild(newChild); // remove and update
   }
 
   let newFirst: MutableChildNode | null;
@@ -123,6 +132,7 @@ export function _insertBefore<T extends MutableChildNode>(
   }
   do {
     newFirst.parentNode = parentNode;
+    // tslint:disable-next-line:no-conditional-assignment
   } while (newFirst !== newLast && (newFirst = newFirst.nextSibling));
   _onUpdateChild(isDocument(parentNode) ? parentNode : parentNode.ownerDocument, parentNode);
 
@@ -134,7 +144,7 @@ export function _insertBefore<T extends MutableChildNode>(
 export function _appendSingleChild<T extends MutableChildNode>(parentNode: Mutable<Node & ParentNode>, newChild: T): T {
   const cp = newChild.parentNode;
   if (cp) {
-    cp.removeChild(newChild); //remove and update
+    cp.removeChild(newChild); // remove and update
   }
   const pre: MutableChildNode | null = parentNode.lastChild;
   newChild.parentNode = parentNode;
@@ -156,31 +166,31 @@ export function importNode<T extends Node>(doc: Document, node: T, deep: boolean
   if (isElement(node)) {
     node2 = node.cloneNode(false) as Mutable<T>;
     node2.ownerDocument = doc;
-    //const attrs = node2.attributes;
-    //const len = attrs.length;
-    //for(let i=0;i<len;i++){
-    //node2.setAttributeNodeNS(importNode(doc,attrs.item(i),deep));
-    //}
+    // const attrs = node2.attributes;
+    // const len = attrs.length;
+    // for(let i=0;i<len;i++){
+    //   node2.setAttributeNodeNS(importNode(doc,attrs.item(i),deep));
+    // }
   } else if (isAttr(node)) {
     deep = true;
   }
-  //case ENTITY_REFERENCE_NODE:
-  //case PROCESSING_INSTRUCTION_NODE:
-  ////case TEXT_NODE:
-  //case CDATA_SECTION_NODE:
-  //case COMMENT_NODE:
-  //	deep = false;
-  //	break;
-  //case DOCUMENT_NODE:
-  //case DOCUMENT_TYPE_NODE:
-  //cannot be imported.
-  //case ENTITY_NODE:
-  //case NOTATION_NODE：
-  //can not hit in level3
-  //default:throw e;
+  // case ENTITY_REFERENCE_NODE:
+  // case PROCESSING_INSTRUCTION_NODE:
+  // case TEXT_NODE:
+  // case CDATA_SECTION_NODE:
+  // case COMMENT_NODE:
+  // deep = false;
+  // break;
+  // case DOCUMENT_NODE:
+  // case DOCUMENT_TYPE_NODE:
+  // cannot be imported.
+  // case ENTITY_NODE:
+  // case NOTATION_NODE：
+  // can not hit in level3
+  // default:throw e;
 
   if (!node2) {
-    node2 = node.cloneNode(false) as Mutable<T>; //false
+    node2 = node.cloneNode(false) as Mutable<T>; // false
   }
   node2.ownerDocument = doc;
   node2.parentNode = null;

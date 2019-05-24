@@ -3,7 +3,7 @@ export const entityMap = {
   gt: '>',
   amp: '&',
   quot: '"',
-  apos: "'",
+  apos: `'`,
   Agrave: 'À',
   Aacute: 'Á',
   Acirc: 'Â',

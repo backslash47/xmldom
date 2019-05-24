@@ -1,4 +1,5 @@
 import '../types';
+
 import { NodeImpl } from '../node';
 
 export class DummyDocumentType extends NodeImpl implements DocumentType {

@@ -1,6 +1,7 @@
 import './types';
-import { NodeTypeTS } from './node-types';
+
 import { DummyAttr } from './dummy/dummy-attr';
+import { NodeTypeTS } from './node-types';
 
 export class AttrImpl extends DummyAttr {
   name: string;

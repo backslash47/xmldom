@@ -1,10 +1,11 @@
 import './types';
+
 import { _appendSingleChild, _visitNode } from './document-utils';
-import { isDocumentFragment, isElement, asChildNode } from './utils';
+import { DOMExceptionImpl } from './dom-exception';
 import { DummyElement } from './dummy/dummy-element';
 import { LiveNodeListImpl } from './live-node-list';
 import { NodeTypeTS } from './node-types';
-import { DOMExceptionImpl } from './dom-exception';
+import { asChildNode, isDocumentFragment, isElement } from './utils';
 
 export class ElementImpl extends DummyElement {
   _nsMap: Record<string, string>;
@@ -36,10 +37,12 @@ export class ElementImpl extends DummyElement {
   }
   removeAttribute(name: string) {
     const attr = this.getAttributeNode(name);
-    attr && this.removeAttributeNode(attr);
+    if (attr) {
+      this.removeAttributeNode(attr);
+    }
   }
 
-  //four real opeartion method
+  // four real opeartion method
   appendChild<T extends Node>(newChild: T): T {
     if (isDocumentFragment(newChild)) {
       return this.insertBefore(newChild, null);
@@ -62,14 +65,16 @@ export class ElementImpl extends DummyElement {
     return this.attributes.setNamedItemNS(newAttr);
   }
   removeAttributeNode(oldAttr: Attr) {
-    //console.log(this == oldAttr.ownerElement)
+    // console.log(this == oldAttr.ownerElement)
     return this.attributes.removeNamedItem(oldAttr.nodeName);
   }
 
-  //get real attribute name,and remove it by removeAttributeNode
+  // get real attribute name,and remove it by removeAttributeNode
   removeAttributeNS(namespaceURI: string, localName: string) {
     const old = this.getAttributeNodeNS(namespaceURI, localName);
-    old && this.removeAttributeNode(old);
+    if (old) {
+      this.removeAttributeNode(old);
+    }
   }
 
   hasAttributeNS(namespaceURI: string, localName: string) {
@@ -89,11 +94,11 @@ export class ElementImpl extends DummyElement {
   }
 
   getElementsByTagName(tagName: string): any {
-    return new LiveNodeListImpl<Element>(this, function(base) {
-      let ls: Element[] = [];
+    return new LiveNodeListImpl<Element>(this, (base) => {
+      const ls: Element[] = [];
 
-      _visitNode(base, function(node) {
-        if (node !== base && isElement(node) && (tagName === '*' || node.tagName == tagName)) {
+      _visitNode(base, (node) => {
+        if (node !== base && isElement(node) && (tagName === '*' || node.tagName === tagName)) {
           ls.push(node);
         }
       });
@@ -101,14 +106,14 @@ export class ElementImpl extends DummyElement {
     });
   }
   getElementsByTagNameNS(namespaceURI: string, localName: string): any {
-    return new LiveNodeListImpl<Element>(this, function(base) {
-      let ls: Element[] = [];
-      _visitNode(base, function(node) {
+    return new LiveNodeListImpl<Element>(this, (base) => {
+      const ls: Element[] = [];
+      _visitNode(base, (node) => {
         if (
           node !== base &&
           isElement(node) &&
           (namespaceURI === '*' || node.namespaceURI === namespaceURI) &&
-          (localName === '*' || node.localName == localName)
+          (localName === '*' || node.localName === localName)
         ) {
           ls.push(node);
         }

@@ -37,10 +37,10 @@ export abstract class DummyNode implements Node {
   get lastElementChild(): Element | null {
     throw new Error('Property not implemented.');
   }
-  append(..._nodes: (string | Node)[]): void {
+  append(..._nodes: Array<string | Node>): void {
     throw new Error('Method not implemented.');
   }
-  prepend(..._nodes: (string | Node)[]): void {
+  prepend(..._nodes: Array<string | Node>): void {
     throw new Error('Method not implemented.');
   }
   querySelector(_selectors: any): any {
@@ -168,16 +168,16 @@ export abstract class DummyNode implements Node {
     throw new Error('Method not implemented.');
   }
 
-  after(..._nodes: (string | Node)[]): void {
+  after(..._nodes: Array<string | Node>): void {
     throw new Error('Method not implemented.');
   }
-  before(..._nodes: (string | Node)[]): void {
+  before(..._nodes: Array<string | Node>): void {
     throw new Error('Method not implemented.');
   }
   remove(): void {
     throw new Error('Method not implemented.');
   }
-  replaceWith(..._nodes: (string | Node)[]): void {
+  replaceWith(..._nodes: Array<string | Node>): void {
     throw new Error('Method not implemented.');
   }
 }

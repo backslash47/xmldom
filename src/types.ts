@@ -5,7 +5,7 @@ declare global {
     _inc: number;
   }
 
-  interface EntityReference extends Node {}
+  type EntityReference = Node;
 
   interface Element {
     _nsMap: Record<string, string>;

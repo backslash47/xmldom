@@ -1,4 +1,5 @@
 import '../types';
+
 import { NodeImpl } from '../node';
 
 export abstract class DummyAttr extends NodeImpl implements Attr {

@@ -1,4 +1,5 @@
 import './types';
+
 import { serializeToString } from './serializer/serialize';
 import { NodeFilterTS } from './types';
 
@@ -27,11 +28,12 @@ export class NodeListOfImpl<T extends Node> extends Array<T> implements NodeList
     super.forEach((value, key) => callbackfn(value, key, this), thisArg);
   }
   toString(isHTML?: boolean, nodeFilter?: NodeFilterTS) {
-    let buf: string[] = [];
+    const buf: string[] = [];
 
-    for (let i = 0; i < this.length; i++) {
-      serializeToString(this[i], buf, isHTML, nodeFilter);
+    for (const item of this) {
+      serializeToString(item, buf, isHTML, nodeFilter);
     }
+
     return buf.join('');
   }
 }

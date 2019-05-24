@@ -1,8 +1,9 @@
 import './types';
+
 import { DocumentImpl } from './document';
 import { DocumentTypeImpl } from './document-type';
-import { NodeListOfImpl } from './node-list-of';
 import { DummyDOMIMplementation } from './dummy/dummy-dom-implementation';
+import { NodeListOfImpl } from './node-list-of';
 
 /**
  * @see http://www.w3.org/TR/REC-DOM-Level-1/level-one-core.html#ID-102161490
@@ -15,7 +16,7 @@ export class DOMImplementationImpl extends DummyDOMIMplementation {
 
     this._features = {};
     if (features) {
-      for (let feature in features) {
+      for (const feature of Object.keys(features)) {
         this._features = features[feature];
       }
     }
@@ -54,9 +55,9 @@ export class DOMImplementationImpl extends DummyDOMIMplementation {
     node.publicId = publicId;
     node.systemId = systemId;
     // Introduced in DOM Level 2:
-    //readonly attribute DOMString        internalSubset;
+    // readonly attribute DOMString        internalSubset;
 
-    //TODO:..
+    // TODO:..
     //  readonly attribute NamedNodeMap     entities;
     //  readonly attribute NamedNodeMap     notations;
     return node;

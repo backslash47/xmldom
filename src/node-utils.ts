@@ -1,16 +1,17 @@
 import './types';
-import { isElement, isDocumentFragment, isProcessingInstruction, isComment, isAttr } from './utils';
+
 import { NamedNodeMapImpl } from './named-node-map';
-import { MutableNode, MutableElement } from './types';
 import { NodeListOfImpl } from './node-list-of';
+import { MutableElement, MutableNode } from './types';
+import { isAttr, isComment, isDocumentFragment, isElement, isProcessingInstruction } from './utils';
 
 export function cloneNode<T extends MutableNode>(doc: Document, node: T, deep: boolean): T {
   const node2: T = new (node.constructor as any)();
-  for (const n in node) {
-    const v = node[n];
-    if (typeof v != 'object') {
-      if (v != node2[n]) {
-        node2[n] = v;
+  for (const n of Object.keys(node)) {
+    const v = (node as any)[n];
+    if (typeof v !== 'object') {
+      if (v !== (node2 as any)[n]) {
+        (node2 as any)[n] = v;
       }
     }
   }

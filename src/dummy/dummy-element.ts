@@ -1,4 +1,5 @@
 import '../types';
+
 import { NodeImpl } from '../node';
 
 export abstract class DummyElement extends NodeImpl implements Element, HTMLElement {
@@ -9,57 +10,6 @@ export abstract class DummyElement extends NodeImpl implements Element, HTMLElem
 
   abstract localName: string;
 
-  get accessKey(): string {
-    throw new Error('Property not implemented.');
-  }
-  get accessKeyLabel(): string {
-    throw new Error('Property not implemented.');
-  }
-  get autocapitalize(): string {
-    throw new Error('Property not implemented.');
-  }
-  get dir(): string {
-    throw new Error('Property not implemented.');
-  }
-  get draggable(): boolean {
-    throw new Error('Property not implemented.');
-  }
-  get hidden(): boolean {
-    throw new Error('Property not implemented.');
-  }
-  get innerText(): string {
-    throw new Error('Property not implemented.');
-  }
-  get lang(): string {
-    throw new Error('Property not implemented.');
-  }
-  get offsetHeight(): number {
-    throw new Error('Property not implemented.');
-  }
-  get offsetLeft(): number {
-    throw new Error('Property not implemented.');
-  }
-  get offsetParent(): Element | null {
-    throw new Error('Property not implemented.');
-  }
-  get offsetTop(): number {
-    throw new Error('Property not implemented.');
-  }
-  get offsetWidth(): number {
-    throw new Error('Property not implemented.');
-  }
-  get spellcheck(): boolean {
-    throw new Error('Property not implemented.');
-  }
-  get title(): string {
-    throw new Error('Property not implemented.');
-  }
-  get translate(): boolean {
-    throw new Error('Property not implemented.');
-  }
-  click(): void {
-    throw new Error('Method not implemented.');
-  }
   onabort: ((this: GlobalEventHandlers, ev: UIEvent) => any) | null;
   onanimationcancel: ((this: GlobalEventHandlers, ev: AnimationEvent) => any) | null;
   onanimationend: ((this: GlobalEventHandlers, ev: AnimationEvent) => any) | null;
@@ -149,6 +99,58 @@ export abstract class DummyElement extends NodeImpl implements Element, HTMLElem
   oncopy: ((this: DocumentAndElementEventHandlers, ev: ClipboardEvent) => any) | null;
   oncut: ((this: DocumentAndElementEventHandlers, ev: ClipboardEvent) => any) | null;
   onpaste: ((this: DocumentAndElementEventHandlers, ev: ClipboardEvent) => any) | null;
+
+  get accessKey(): string {
+    throw new Error('Property not implemented.');
+  }
+  get accessKeyLabel(): string {
+    throw new Error('Property not implemented.');
+  }
+  get autocapitalize(): string {
+    throw new Error('Property not implemented.');
+  }
+  get dir(): string {
+    throw new Error('Property not implemented.');
+  }
+  get draggable(): boolean {
+    throw new Error('Property not implemented.');
+  }
+  get hidden(): boolean {
+    throw new Error('Property not implemented.');
+  }
+  get innerText(): string {
+    throw new Error('Property not implemented.');
+  }
+  get lang(): string {
+    throw new Error('Property not implemented.');
+  }
+  get offsetHeight(): number {
+    throw new Error('Property not implemented.');
+  }
+  get offsetLeft(): number {
+    throw new Error('Property not implemented.');
+  }
+  get offsetParent(): Element | null {
+    throw new Error('Property not implemented.');
+  }
+  get offsetTop(): number {
+    throw new Error('Property not implemented.');
+  }
+  get offsetWidth(): number {
+    throw new Error('Property not implemented.');
+  }
+  get spellcheck(): boolean {
+    throw new Error('Property not implemented.');
+  }
+  get title(): string {
+    throw new Error('Property not implemented.');
+  }
+  get translate(): boolean {
+    throw new Error('Property not implemented.');
+  }
+  click(): void {
+    throw new Error('Method not implemented.');
+  }
   get contentEditable(): string {
     throw new Error('Property not implemented.');
   }

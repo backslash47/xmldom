@@ -1,18 +1,19 @@
 import '../types';
+
+import { NodeFilterTS, VisibleNamespaces } from '../types';
 import {
-  isElement,
+  isAttr,
+  isCDATASection,
+  isCharacterData,
+  isComment,
   isDocument,
   isDocumentFragment,
-  isAttr,
-  isText,
-  isCDATASection,
-  isComment,
   isDocumentType,
-  isProcessingInstruction,
+  isElement,
   isEntityReference,
-  isCharacterData,
+  isProcessingInstruction,
+  isText,
 } from '../utils';
-import { VisibleNamespaces, NodeFilterTS } from '../types';
 
 const htmlns = 'http://www.w3.org/1999/xhtml';
 
@@ -26,18 +27,20 @@ export function serializeToString(
   if (nodeFilter) {
     node = nodeFilter(node);
     if (node) {
-      if (typeof node == 'string') {
+      if (typeof node === 'string') {
         buf.push(node);
         return;
       }
     } else {
       return;
     }
-    //buf.sort.apply(attrs, attributeSorter);
+    // buf.sort.apply(attrs, attributeSorter);
   }
 
   if (isElement(node)) {
-    if (!visibleNamespaces) visibleNamespaces = [];
+    if (!visibleNamespaces) {
+      visibleNamespaces = [];
+    }
     // const startVisibleNamespaces = visibleNamespaces.length;
     const attrs = node.attributes;
     const len = attrs.length;
@@ -50,9 +53,9 @@ export function serializeToString(
     for (let i = 0; i < len; i++) {
       // add namespaces for attributes
       const attr = attrs.item(i)!;
-      if (attr.prefix == 'xmlns') {
+      if (attr.prefix === 'xmlns') {
         visibleNamespaces.push({ prefix: attr.localName, namespace: attr.value });
-      } else if (attr.nodeName == 'xmlns') {
+      } else if (attr.nodeName === 'xmlns') {
         visibleNamespaces.push({ prefix: '', namespace: attr.value });
       }
     }
@@ -63,7 +66,7 @@ export function serializeToString(
         const uri = attr.namespaceURI!;
         const ns = prefix ? ' xmlns:' + prefix : ' xmlns';
         buf.push(ns, '="', uri, '"');
-        visibleNamespaces.push({ prefix: prefix, namespace: uri });
+        visibleNamespaces.push({ prefix, namespace: uri });
       }
       serializeToString(attr, buf, isHTML, nodeFilter, visibleNamespaces);
     }
@@ -73,12 +76,12 @@ export function serializeToString(
       const uri = node.namespaceURI!;
       const ns = prefix ? ' xmlns:' + prefix : ' xmlns';
       buf.push(ns, '="', uri, '"');
-      visibleNamespaces.push({ prefix: prefix, namespace: uri });
+      visibleNamespaces.push({ prefix, namespace: uri });
     }
 
     if (child || (isHTML && !/^(?:meta|link|img|br|hr|input)$/i.test(nodeName))) {
       buf.push('>');
-      //if is cdata child node
+      // if is cdata child node
       if (isHTML && /^script$/i.test(nodeName)) {
         while (child) {
           if (isCharacterData(child)) {
@@ -99,7 +102,7 @@ export function serializeToString(
       buf.push('/>');
     }
     // remove added visible namespaces
-    //visibleNamespaces.length = startVisibleNamespaces;
+    // visibleNamespaces.length = startVisibleNamespaces;
     return;
   } else if (isDocument(node) || isDocumentFragment(node)) {
     let child = node.firstChild;
@@ -122,11 +125,11 @@ export function serializeToString(
     buf.push('<!DOCTYPE ', node.name);
     if (pubid) {
       buf.push(' PUBLIC "', pubid);
-      if (sysid && sysid != '.') {
+      if (sysid && sysid !== '.') {
         buf.push('" "', sysid);
       }
       buf.push('">');
-    } else if (sysid && sysid != '.') {
+    } else if (sysid && sysid !== '.') {
       buf.push(' SYSTEM "', sysid, '">');
     } else {
       const sub = node.internalSubset;
@@ -151,35 +154,35 @@ function needNamespaceDefine(node: Element | Attr, _isHTML: boolean, visibleName
   if (!prefix && !uri) {
     return false;
   }
-  if ((prefix === 'xml' && uri === 'http://www.w3.org/XML/1998/namespace') || uri == 'http://www.w3.org/2000/xmlns/') {
+  if ((prefix === 'xml' && uri === 'http://www.w3.org/XML/1998/namespace') || uri === 'http://www.w3.org/2000/xmlns/') {
     return false;
   }
 
   let i = visibleNamespaces.length;
-  //console.log('@@@@',node.tagName,prefix,uri,visibleNamespaces)
+  // console.log('@@@@',node.tagName,prefix,uri,visibleNamespaces)
   while (i--) {
     const ns = visibleNamespaces[i];
     // get namespace prefix
-    //console.log(node.nodeType,node.tagName,ns.prefix,prefix)
-    if (ns.prefix == prefix) {
-      return ns.namespace != uri;
+    // console.log(node.nodeType,node.tagName,ns.prefix,prefix)
+    if (ns.prefix === prefix) {
+      return ns.namespace !== uri;
     }
   }
-  //console.log(isHTML,uri,prefix=='')
-  //if(isHTML && prefix ==null && uri == 'http://www.w3.org/1999/xhtml'){
-  //	return false;
-  //}
-  //node.flag = '11111'
-  //console.error(3,true,node.flag,node.prefix,node.namespaceURI)
+  // console.log(isHTML,uri,prefix=='')
+  // if(isHTML && prefix ==null && uri == 'http://www.w3.org/1999/xhtml'){
+  // 	 return false;
+  // }
+  // node.flag = '11111'
+  // console.error(3,true,node.flag,node.prefix,node.namespaceURI)
   return true;
 }
 
 function _xmlEncoder(c: string) {
   return (
-    (c == '<' && '&lt;') ||
-    (c == '>' && '&gt;') ||
-    (c == '&' && '&amp;') ||
-    (c == '"' && '&quot;') ||
+    (c === '<' && '&lt;') ||
+    (c === '>' && '&gt;') ||
+    (c === '&' && '&amp;') ||
+    (c === '"' && '&quot;') ||
     '&#' + c.charCodeAt(0) + ';'
   );
 }
