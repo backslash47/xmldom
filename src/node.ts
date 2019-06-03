@@ -2,10 +2,12 @@ import './types';
 
 import { _insertBefore, _removeChild } from './document-utils';
 import { DummyNode } from './dummy/dummy-node';
+import { MutationRecordImpl } from './mutation/mutation-record';
+import { NodeListImpl } from './node-list';
 import { NodeTypeTS } from './node-types';
 import { cloneNode, getTextContent } from './node-utils';
 import { serializeToString } from './serializer/serialize';
-import { NodeFilterTS, VisibleNamespaces } from './types';
+import { NodeFilterTS, RegisteredObserver, VisibleNamespaces } from './types';
 import { asChildNode, isAttr, isDocument, isDocumentFragment, isElement, isText } from './utils';
 
 /**
@@ -39,6 +41,8 @@ export class NodeImpl extends DummyNode {
   readonly DOCUMENT_FRAGMENT_NODE = NodeTypeTS.DOCUMENT_FRAGMENT_NODE;
   readonly NOTATION_NODE = NodeTypeTS.NOTATION_NODE;
 
+  observers: RegisteredObserver[] = [];
+
   nodeType: number;
   nodeName: string;
   firstChild: ChildNode | null = null;
@@ -55,6 +59,75 @@ export class NodeImpl extends DummyNode {
   lineNumber?: number;
   columnNumber?: number;
 
+  addObserver(observer: MutationObserver, options: MutationObserverInit): boolean {
+    for (const registered of this.observers) {
+      if (registered.observer === observer) {
+        // fixme: this is not according to the spec
+        registered.options = options;
+        return true;
+      }
+    }
+
+    this.observers.push({ observer, options });
+    return false;
+  }
+  delObserver(observer: MutationObserver): void {
+    this.observers = this.observers.filter((registered) => registered.observer !== observer);
+  }
+
+  queueMutation(r: MutationRecord) {
+    const type = r.type;
+    const name = r.attributeName;
+    const namespace = r.attributeNamespace;
+    const oldValue = r.oldValue;
+    const target = r.target;
+
+    const interestedObservers = new Map<MutationObserver, null | string>();
+    const nodes = inclusiveAncestors(this);
+
+    nodes.forEach((node) => {
+      node.observers.forEach((registered) => {
+        const options = registered.options;
+
+        // https://dom.spec.whatwg.org/#queueing-a-mutation-record
+        if (
+          !(node !== target && options.subtree === false) &&
+          !(type === 'attributes' && options.attributes !== true) &&
+          !(
+            type === 'attributes' &&
+            options.attributeFilter !== undefined &&
+            ((name != null && !options.attributeFilter.includes(name)) || namespace != null)
+          ) &&
+          !(type === 'characterData' && options.characterData !== true) &&
+          !(type === 'childList' && options.childList === false)
+        ) {
+          const mo = registered.observer;
+
+          if (!interestedObservers.has(mo)) {
+            interestedObservers.set(mo, null);
+          }
+
+          if (
+            (type === 'attributes' && options.attributeOldValue === true) ||
+            (type === 'characterData' && options.characterDataOldValue === true)
+          ) {
+            interestedObservers.set(mo, oldValue);
+          }
+        }
+      });
+    });
+
+    interestedObservers.forEach((mappedOldValue, observer) => {
+      const record = new MutationRecordImpl(r);
+      record.oldValue = mappedOldValue;
+
+      observer.queueRecord(record);
+
+      // fixme: not entirely according to spec
+      process.nextTick(() => observer.notify());
+    });
+  }
+
   // value: string | null = null; // todo: what is the purpose of this
 
   // ata: string | null = null;
@@ -62,7 +135,22 @@ export class NodeImpl extends DummyNode {
   // Modified in DOM Level 2:
   insertBefore<T extends Node>(newChild: T, refChild: Node | null): T {
     // raises
-    return _insertBefore(this, asChildNode(newChild), refChild == null ? null : asChildNode(refChild));
+    const _newChild = _insertBefore(this, asChildNode(newChild), refChild == null ? null : asChildNode(refChild));
+
+    // notify observers
+    this.queueMutation({
+      type: 'childList',
+      target: this,
+      addedNodes: new NodeListImpl(_newChild),
+      removedNodes: new NodeListImpl(),
+      previousSibling: _newChild.previousSibling,
+      nextSibling: _newChild.nextSibling,
+      attributeName: null,
+      attributeNamespace: null,
+      oldValue: null,
+    });
+
+    return _newChild;
   }
   replaceChild<T extends Node>(newChild: Node, oldChild: T): T {
     // raises
@@ -70,7 +158,22 @@ export class NodeImpl extends DummyNode {
     return this.removeChild(oldChild);
   }
   removeChild<T extends Node>(oldChild: T): T {
-    return _removeChild(this, oldChild);
+    const _oldChild = _removeChild(this, oldChild);
+
+    // notify observers
+    this.queueMutation({
+      type: 'childList',
+      target: this,
+      addedNodes: new NodeListImpl(),
+      removedNodes: new NodeListImpl(_oldChild),
+      previousSibling: _oldChild.previousSibling,
+      nextSibling: _oldChild.nextSibling,
+      attributeName: null,
+      attributeNamespace: null,
+      oldValue: null,
+    });
+
+    return _oldChild;
   }
   appendChild<T extends Node>(newChild: T): T {
     return this.insertBefore(newChild, null);
@@ -187,7 +290,6 @@ export class NodeImpl extends DummyNode {
         this.removeChild(this.firstChild);
       }
       if (data) {
-        // todo: removed  || String(data), is it ok ?
         this.appendChild(this.ownerDocument.createTextNode(data));
       }
     } else {
@@ -203,5 +305,13 @@ export class NodeImpl extends DummyNode {
     } else {
       return this.ownerDocument;
     }
+  }
+}
+
+function inclusiveAncestors(node: Node): Node[] {
+  if (node.parentNode != null) {
+    return [node, ...inclusiveAncestors(node.parentNode)];
+  } else {
+    return [node];
   }
 }

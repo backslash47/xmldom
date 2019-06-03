@@ -6,6 +6,7 @@ import { DocumentFragmentImpl } from './document-fragment';
 import { DocumentTypeImpl } from './document-type';
 import { DOMImplementationImpl } from './dom-implementation';
 import { ElementImpl } from './element';
+import { MutationObserverImpl } from './mutation/mutation-observer';
 import { NamedNodeMapImpl } from './named-node-map';
 import { NodeImpl } from './node';
 import { NodeListImpl } from './node-list';
@@ -23,6 +24,7 @@ export {
   DocumentTypeImpl,
   DOMImplementationImpl,
   ElementImpl,
+  MutationObserverImpl,
   NamedNodeMapImpl,
   NodeImpl,
   NodeListImpl,
@@ -49,4 +51,6 @@ if (globalThis) {
   globalThis.Node = NodeImpl;
   globalThis.ProcessingInstruction = ProcessingInstructionImpl;
   globalThis.Text = TextImpl;
+
+  globalThis.MutationObserver = MutationObserverImpl;
 }

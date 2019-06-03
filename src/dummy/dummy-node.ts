@@ -1,6 +1,9 @@
 import '../types';
 
+import { RegisteredObserver } from '../types';
+
 export abstract class DummyNode implements Node {
+  abstract observers: RegisteredObserver[];
   abstract ownerDocument: Document;
   abstract firstChild: ChildNode | null;
   abstract lastChild: ChildNode | null;
@@ -12,7 +15,6 @@ export abstract class DummyNode implements Node {
   abstract nodeType: number;
   abstract nodeValue: string | null;
   abstract childNodes: NodeListOf<ChildNode>;
-
   abstract ATTRIBUTE_NODE: number;
   abstract CDATA_SECTION_NODE: number;
   abstract COMMENT_NODE: number;
@@ -25,6 +27,10 @@ export abstract class DummyNode implements Node {
   abstract NOTATION_NODE: number;
   abstract PROCESSING_INSTRUCTION_NODE: number;
   abstract TEXT_NODE: number;
+
+  abstract addObserver(observer: MutationObserver, options: MutationObserverInit): boolean;
+  abstract delObserver(observer: MutationObserver): void;
+
   get childElementCount(): number {
     throw new Error('Property not implemented.');
   }

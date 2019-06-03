@@ -2,10 +2,32 @@ import './types';
 
 import { DOMExceptionImpl } from './dom-exception';
 import { DummyCharacterData } from './dummy/dummy-character-data';
+import { NodeListImpl } from './node-list';
 
 export class CharacterDataImpl extends DummyCharacterData {
-  data: string = '';
+  _data: string = '';
   length: number = 0;
+
+  get data() {
+    return this._data;
+  }
+
+  set data(data: string) {
+    // notify observers
+    this.queueMutation({
+      type: 'characterData',
+      target: this,
+      addedNodes: new NodeListImpl(),
+      removedNodes: new NodeListImpl(),
+      previousSibling: null,
+      nextSibling: null,
+      attributeName: null,
+      attributeNamespace: null,
+      oldValue: this._data,
+    });
+
+    this._data = data;
+  }
 
   substringData(offset: number, count: number) {
     return this.data.substring(offset, offset + count);

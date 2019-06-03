@@ -10,6 +10,7 @@ import { ElementImpl } from './element';
 import { EntityReferenceImpl } from './entity-reference';
 import { LiveNodeListImpl } from './live-node-list';
 import { NamedNodeMapImpl } from './named-node-map';
+import { NodeListImpl } from './node-list';
 import { NodeListOfImpl } from './node-list-of';
 import { NodeTypeTS } from './node-types';
 import { ProcessingInstructionImpl } from './processing-instruction';
@@ -41,16 +42,29 @@ export class DocumentImpl extends DummyDocument {
         child = next;
       }
       return newChild;
-    }
-    if (this.documentElement == null && isElement(newChild)) {
-      this.documentElement = asHTMLElement(newChild);
-    }
+    } else {
+      if (this.documentElement == null && isElement(newChild)) {
+        this.documentElement = asHTMLElement(newChild);
+      }
 
-    return (
-      _insertBefore(this, asChildNode(newChild), refChild == null ? null : asChildNode(refChild)),
-      ((asChildNode(newChild) as MutableChildNode).ownerDocument = this),
-      newChild
-    );
+      const _newChild = _insertBefore(this, asChildNode(newChild), refChild == null ? null : asChildNode(refChild));
+      (asChildNode(newChild) as MutableChildNode).ownerDocument = this;
+
+      // notify observers
+      this.queueMutation({
+        type: 'childList',
+        target: this,
+        addedNodes: new NodeListImpl(_newChild),
+        removedNodes: new NodeListImpl(),
+        previousSibling: _newChild.previousSibling,
+        nextSibling: _newChild.nextSibling,
+        attributeName: null,
+        attributeNamespace: null,
+        oldValue: null,
+      });
+
+      return _newChild;
+    }
   }
   removeChild<T extends Node>(oldChild: T): T {
     if ((this.documentElement as unknown) === oldChild) {

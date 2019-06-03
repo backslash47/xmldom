@@ -4,6 +4,7 @@ import { _appendSingleChild, _visitNode } from './document-utils';
 import { DOMExceptionImpl } from './dom-exception';
 import { DummyElement } from './dummy/dummy-element';
 import { LiveNodeListImpl } from './live-node-list';
+import { NodeListImpl } from './node-list';
 import { NodeTypeTS } from './node-types';
 import { asChildNode, isDocumentFragment, isElement } from './utils';
 
@@ -47,7 +48,22 @@ export class ElementImpl extends DummyElement {
     if (isDocumentFragment(newChild)) {
       return this.insertBefore(newChild, null);
     } else {
-      return _appendSingleChild(this, asChildNode(newChild));
+      const _newChild = _appendSingleChild(this, asChildNode(newChild));
+
+      // notify observers
+      this.queueMutation({
+        type: 'childList',
+        target: this,
+        addedNodes: new NodeListImpl(_newChild),
+        removedNodes: new NodeListImpl(),
+        previousSibling: _newChild.previousSibling,
+        nextSibling: _newChild.nextSibling,
+        attributeName: null,
+        attributeNamespace: null,
+        oldValue: null,
+      });
+
+      return _newChild;
     }
   }
   setAttributeNode(newAttr: Attr) {
@@ -55,18 +71,63 @@ export class ElementImpl extends DummyElement {
       throw new DOMExceptionImpl(DOMExceptionImpl.WRONG_DOCUMENT_ERR);
     }
 
-    return this.attributes.setNamedItem(newAttr);
+    const oldAttr = this.attributes.setNamedItem(newAttr);
+
+    // notify observers
+    this.queueMutation({
+      type: 'attributes',
+      target: this,
+      addedNodes: new NodeListImpl(),
+      removedNodes: new NodeListImpl(),
+      previousSibling: null,
+      nextSibling: null,
+      attributeName: newAttr.nodeName,
+      attributeNamespace: null,
+      oldValue: oldAttr != null ? oldAttr.value : null,
+    });
+
+    return oldAttr;
   }
   setAttributeNodeNS(newAttr: Attr) {
     if (this.ownerDocumentInternal() !== newAttr.ownerDocument) {
       throw new DOMExceptionImpl(DOMExceptionImpl.WRONG_DOCUMENT_ERR);
     }
 
-    return this.attributes.setNamedItemNS(newAttr);
+    const oldAttr = this.attributes.setNamedItemNS(newAttr);
+
+    // notify observers
+    this.queueMutation({
+      type: 'attributes',
+      target: this,
+      addedNodes: new NodeListImpl(),
+      removedNodes: new NodeListImpl(),
+      previousSibling: null,
+      nextSibling: null,
+      attributeName: newAttr.localName,
+      attributeNamespace: newAttr.namespaceURI,
+      oldValue: oldAttr != null ? oldAttr.value : null,
+    });
+
+    return oldAttr;
   }
-  removeAttributeNode(oldAttr: Attr) {
+  removeAttributeNode(attr: Attr) {
     // console.log(this == oldAttr.ownerElement)
-    return this.attributes.removeNamedItem(oldAttr.nodeName);
+    const oldAttr = this.attributes.removeNamedItem(attr.nodeName);
+
+    // notify observers
+    this.queueMutation({
+      type: 'attributes',
+      target: this,
+      addedNodes: new NodeListImpl(),
+      removedNodes: new NodeListImpl(),
+      previousSibling: null,
+      nextSibling: null,
+      attributeName: oldAttr.namespaceURI != null ? oldAttr.localName : oldAttr.nodeName,
+      attributeNamespace: oldAttr.namespaceURI,
+      oldValue: oldAttr.value,
+    });
+
+    return oldAttr;
   }
 
   // get real attribute name,and remove it by removeAttributeNode
