@@ -135,6 +135,13 @@ export abstract class DummyDocument extends NodeImpl implements Document {
   createAttributeNS(_namespaceURI: string, _qualifiedName: string): Attr {
     throw new Error('Method not implemented.');
   }
+  createExpression(_expression: string, _resolver?: XPathNSResolver | null | undefined): XPathExpression {
+    throw new Error('Method not implemented.');
+  }
+  createNSResolver(_nodeResolver: Node): XPathNSResolver {
+    throw new Error('Method not implemented.');
+  }
+
   get URL(): string {
     throw new Error('Property not implemented.');
   }
@@ -333,7 +340,7 @@ export abstract class DummyDocument extends NodeImpl implements Document {
   evaluate(
     _expression: string,
     _contextNode: Node,
-    _resolver: XPathNSResolver | ((prefix: string) => string | null) | null,
+    _resolver: XPathNSResolver | null,
     _type: number,
     _result: XPathResult | null,
   ): XPathResult {
