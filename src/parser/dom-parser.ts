@@ -71,11 +71,11 @@ export class DOMParserImpl implements DOMParser {
       }
 
       if (fn) {
-        errorHandler[key] = (msg) => {
+        errorHandler[key] = (msg: string) => {
           fn('[xmldom ' + key + ']\t' + msg + _locator(locator));
         };
       } else {
-        errorHandler[key] = (_msg) => {
+        errorHandler[key] = (_msg: string) => {
           // empty
         };
       }
