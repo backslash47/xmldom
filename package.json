@@ -46,7 +46,6 @@
       "url": "https://github.com/backslash47"
     }
   ],
-  "dependencies": {},
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.5",
