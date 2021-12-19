@@ -88,6 +88,8 @@ export function _removeChild<T extends Node>(parentNode: MutableNode, child: T):
     parentNode.lastChild = previous as ChildNode | null;
   }
   _onUpdateChild(parentNode.ownerDocument, parentNode);
+
+  (child as MutableNode).parentNode = null;
   return child;
 }
 /**

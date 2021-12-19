@@ -324,6 +324,21 @@ export class NodeImpl extends DummyNode {
     }
     parentNode.replaceChild(node, this);
   }
+
+  get isConnected() {
+    let node: Node | null = this;
+
+    while (node != null) {
+      if (node instanceof Document) {
+        return true;
+      } else {
+        node = node.parentNode;
+      }
+    }
+
+    return false;
+  }
+  
 }
 
 function inclusiveAncestors(node: Node): Node[] {
