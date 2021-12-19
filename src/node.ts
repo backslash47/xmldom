@@ -306,6 +306,24 @@ export class NodeImpl extends DummyNode {
       return this.ownerDocument;
     }
   }
+
+  replaceWith(..._nodes: Array<string | Node>): void {
+    if (_nodes.length !== 1) {
+      throw new Error('Method not implemented.');
+    }
+
+    const node = _nodes[0];
+    if (!(node instanceof Node)) {
+      throw new Error('Method not implemented.');
+    }
+
+    const parentNode = this.parentNode;
+
+    if (parentNode == null) {
+      throw new Error('Node does not have parent.');
+    }
+    parentNode.replaceChild(node, this);
+  }
 }
 
 function inclusiveAncestors(node: Node): Node[] {
