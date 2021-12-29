@@ -186,4 +186,49 @@ export class ElementImpl extends DummyElement {
   get outerHTML() {
     return this.toString();
   }
+
+  get firstElementChild() {
+    const { childNodes } = this;
+
+    for (let i = 0; i < childNodes.length; i++) {
+      const child = childNodes.item(i);
+
+      if (isElement(child)) {
+        return child;
+      }
+    }
+
+    return null;
+  }
+
+  get children() {
+    const collection: NodeListImpl<Element> = new NodeListImpl<Element>();
+
+    const { childNodes } = this;
+
+    for (let i = 0; i < childNodes.length; i++) {
+      const child = childNodes.item(i);
+
+      if (isElement(child)) {
+        collection.push(child);
+      }
+    }
+
+    return collection;
+  }
+
+  get childElementCount() {
+    let counter = 0;
+    const { childNodes } = this;
+
+    for (let i = 0; i < childNodes.length; i++) {
+      const child = childNodes.item(i);
+
+      if (isElement(child)) {
+        counter++;
+      }
+    }
+
+    return counter;
+  }
 }
