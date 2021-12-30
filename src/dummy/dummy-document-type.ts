@@ -2,7 +2,9 @@ import '../types';
 
 import { NodeImpl } from '../node';
 
-export class DummyDocumentType extends NodeImpl implements DocumentType {
+export abstract class DummyDocumentType extends NodeImpl implements DocumentType {
+  abstract ownerDocument: Document;
+
   get name(): string {
     throw new Error('Property not implemented.');
   }

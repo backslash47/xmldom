@@ -2,6 +2,8 @@ import { DummyText } from './dummy/dummy-text';
 import { NodeTypeTS } from './node-types';
 
 export class TextImpl extends DummyText {
+  ownerDocument: Document;
+  
   constructor() {
     super();
     this.nodeName = '#text';

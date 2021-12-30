@@ -3,7 +3,7 @@ import './types';
 import { NamedNodeMapImpl } from './named-node-map';
 import { NodeListOfImpl } from './node-list-of';
 import { MutableElement, MutableNode } from './types';
-import { isAttr, isComment, isDocumentFragment, isElement, isProcessingInstruction } from './utils';
+import { isAttr, isElement } from './utils';
 
 export function cloneNode<T extends MutableNode>(doc: Document, node: T, deep: boolean): T {
   const node2: T = new (node.constructor as any)();
@@ -40,26 +40,4 @@ export function cloneNode<T extends MutableNode>(doc: Document, node: T, deep: b
     }
   }
   return node2;
-}
-
-export function getTextContent(n: Node): string | null {
-  let node: Node | null = n;
-
-  if (isElement(node) || isDocumentFragment(node)) {
-    const buf: string[] = [];
-    node = node.firstChild;
-    while (node) {
-      if (!isProcessingInstruction(node) && !isComment(node)) {
-        const content = getTextContent(node);
-
-        if (content != null) {
-          buf.push(content);
-        }
-      }
-      node = node.nextSibling;
-    }
-    return buf.join('');
-  } else {
-    return node.nodeValue;
-  }
 }

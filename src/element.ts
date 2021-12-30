@@ -6,13 +6,14 @@ import { DummyElement } from './dummy/dummy-element';
 import { LiveNodeListImpl } from './live-node-list';
 import { NodeListImpl } from './node-list';
 import { NodeTypeTS } from './node-types';
-import { asChildNode, isDocumentFragment, isElement } from './utils';
+import { asChildNode, isDocumentFragment, isElement, isProcessingInstruction, isComment } from './utils';
 
 export class ElementImpl extends DummyElement {
   _nsMap: Record<string, string>;
   tagName: string;
   attributes: NamedNodeMap;
   localName: string;
+  ownerDocument: Document;
 
   constructor() {
     super();
@@ -230,5 +231,32 @@ export class ElementImpl extends DummyElement {
     }
 
     return counter;
+  }
+
+  get textContent() {
+    let node: Node | null = this;
+
+    const buf: string[] = [];
+    node = node.firstChild;
+    while (node) {
+      if (!isProcessingInstruction(node) && !isComment(node)) {
+        const content = node.textContent;
+
+        if (content != null) {
+          buf.push(content);
+        }
+      }
+      node = node.nextSibling;
+    }
+    return buf.join('');
+  }
+
+  set textContent(data: string | null) {
+    while (this.firstChild) {
+      this.removeChild(this.firstChild);
+    }
+    if (data) {
+      this.appendChild(this.ownerDocument.createTextNode(data));
+    }
   }
 }

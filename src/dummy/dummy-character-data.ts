@@ -5,6 +5,7 @@ import { NodeImpl } from '../node';
 export abstract class DummyCharacterData extends NodeImpl implements CharacterData {
   abstract data: string;
   abstract length: number;
+  abstract ownerDocument: Document;
   appendData(_data: string): void {
     throw new Error('Method not implemented.');
   }

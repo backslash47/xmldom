@@ -184,7 +184,7 @@ export abstract class DummyDocument extends NodeImpl implements Document {
   get currentScript(): HTMLScriptElement | SVGScriptElement | null {
     throw new Error('Property not implemented.');
   }
-  get defaultView(): Window | null {
+  get defaultView(): (Window & typeof globalThis)  | null {
     throw new Error('Property not implemented.');
   }
   get designMode(): string {
@@ -247,7 +247,7 @@ export abstract class DummyDocument extends NodeImpl implements Document {
   get onpointerlockerror(): ((this: Document, ev: Event) => any) | null {
     throw new Error('Property not implemented.');
   }
-  get onreadystatechange(): ((this: Document, ev: ProgressEvent) => any) | null {
+  get onreadystatechange(): ((this: Document, ev: Event) => any) | null {
     throw new Error('Property not implemented.');
   }
   get onvisibilitychange(): ((this: Document, ev: Event) => any) | null {

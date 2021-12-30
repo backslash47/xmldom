@@ -7,6 +7,7 @@ import { NodeListImpl } from './node-list';
 export class CharacterDataImpl extends DummyCharacterData {
   _data: string = '';
   length: number = 0;
+  ownerDocument: Document;
 
   get data() {
     return this._data;

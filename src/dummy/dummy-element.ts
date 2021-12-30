@@ -10,6 +10,8 @@ export abstract class DummyElement extends NodeImpl implements Element, HTMLElem
 
   abstract localName: string;
 
+  abstract ownerDocument: Document;
+
   onabort: ((this: GlobalEventHandlers, ev: UIEvent) => any) | null;
   onanimationcancel: ((this: GlobalEventHandlers, ev: AnimationEvent) => any) | null;
   onanimationend: ((this: GlobalEventHandlers, ev: AnimationEvent) => any) | null;
@@ -107,6 +109,9 @@ export abstract class DummyElement extends NodeImpl implements Element, HTMLElem
     throw new Error('Property not implemented.');
   }
   get autocapitalize(): string {
+    throw new Error('Property not implemented.');
+  }
+  get autofocus() : boolean {
     throw new Error('Property not implemented.');
   }
   get dir(): string {
@@ -254,10 +259,10 @@ export abstract class DummyElement extends NodeImpl implements Element, HTMLElem
   getAttributeNodeNS(_namespaceURI: string, _localName: string): Attr | null {
     throw new Error('Method not implemented.');
   }
-  getBoundingClientRect(): ClientRect | DOMRect {
+  getBoundingClientRect(): DOMRect {
     throw new Error('Method not implemented.');
   }
-  getClientRects(): ClientRectList | DOMRectList {
+  getClientRects(): DOMRectList {
     throw new Error('Method not implemented.');
   }
   getElementsByClassName(_classNames: string): HTMLCollectionOf<Element> {

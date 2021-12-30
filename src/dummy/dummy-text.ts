@@ -2,7 +2,9 @@ import '../types';
 
 import { CharacterDataImpl } from '../character-data';
 
-export class DummyText extends CharacterDataImpl implements Text {
+export abstract class DummyText extends CharacterDataImpl implements Text {
+  abstract ownerDocument: Document;
+
   get assignedSlot(): HTMLSlotElement | null {
     throw new Error('Property not implemented.');
   }

@@ -83,7 +83,7 @@ export function _removeChild<T extends Node>(parentNode: MutableNode, child: T):
     (parentNode as MutableNode).firstChild = next;
   }
   if (next) {
-    next.previousSibling = previous;
+    next.previousSibling = previous as ChildNode | null;
   } else {
     parentNode.lastChild = previous as ChildNode | null;
   }

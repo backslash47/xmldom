@@ -2,7 +2,9 @@ import '../types';
 
 import { CharacterDataImpl } from '../character-data';
 
-export class DummyCDATASection extends CharacterDataImpl implements CDATASection {
+export abstract class DummyCDATASection extends CharacterDataImpl implements CDATASection {
+  abstract ownerDocument: Document;
+
   get assignedSlot(): HTMLSlotElement | null {
     throw new Error('Property not implemented.');
   }

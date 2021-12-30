@@ -8,4 +8,5 @@ export abstract class DummyAttr extends NodeImpl implements Attr {
   abstract localName: string;
   abstract ownerElement: Element | null;
   abstract specified: boolean;
+  abstract ownerDocument: Document;
 }

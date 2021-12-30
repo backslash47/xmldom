@@ -5,10 +5,10 @@ import { DummyNode } from './dummy/dummy-node';
 import { MutationRecordImpl } from './mutation/mutation-record';
 import { NodeListImpl } from './node-list';
 import { NodeTypeTS } from './node-types';
-import { cloneNode, getTextContent } from './node-utils';
+import { cloneNode } from './node-utils';
 import { serializeToString } from './serializer/serialize';
 import { NodeFilterTS, RegisteredObserver, VisibleNamespaces } from './types';
-import { asChildNode, isAttr, isDocument, isDocumentFragment, isElement, isText } from './utils';
+import { asChildNode, isAttr, isDocument, isElement, isText } from './utils';
 
 /**
  * @see http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/core.html#ID-1950641247
@@ -47,11 +47,11 @@ export class NodeImpl extends DummyNode {
   nodeName: string;
   firstChild: ChildNode | null = null;
   lastChild: ChildNode | null = null;
-  previousSibling: Node | null = null;
+  previousSibling: ChildNode | null = null;
   nextSibling: ChildNode | null = null;
   parentNode: Node & ParentNode | null = null;
   childNodes: NodeListOf<ChildNode> = null as never; // todo: use empty list instead of null maybe
-  ownerDocument: Document;
+  ownerDocument: Document | null;
   nodeValue: string | null = null;
   namespaceURI: string | null = null;
   prefix: string | null = null;
@@ -282,21 +282,12 @@ export class NodeImpl extends DummyNode {
   }
 
   get textContent() {
-    return getTextContent(this);
+    return this.nodeValue;
   }
   set textContent(data: string | null) {
-    if (isElement(this) || isDocumentFragment(this)) {
-      while (this.firstChild) {
-        this.removeChild(this.firstChild);
-      }
-      if (data) {
-        this.appendChild(this.ownerDocument.createTextNode(data));
-      }
-    } else {
-      // this.data = data;
-      // this.value = data;
-      this.nodeValue = data;
-    }
+    // this.data = data;
+    // this.value = data;
+    this.nodeValue = data;
   }
 
   protected ownerDocumentInternal() {

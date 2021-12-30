@@ -4,10 +4,10 @@ import { RegisteredObserver } from '../types';
 
 export abstract class DummyNode implements Node {
   abstract observers: RegisteredObserver[];
-  abstract ownerDocument: Document;
+  abstract ownerDocument: Document | null;
   abstract firstChild: ChildNode | null;
   abstract lastChild: ChildNode | null;
-  abstract previousSibling: Node | null;
+  abstract previousSibling: ChildNode | null;
   abstract nextSibling: ChildNode | null;
   abstract parentNode: (Node & ParentNode) | null;
   abstract namespaceURI: string | null;
