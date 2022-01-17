@@ -259,4 +259,8 @@ export class ElementImpl extends DummyElement {
       this.appendChild(this.ownerDocument.createTextNode(data));
     }
   }
+
+  get parentElement(): HTMLElement | null {
+    return isElement(this.parentNode) ? this.parentNode as HTMLElement : null;
+  }
 }
