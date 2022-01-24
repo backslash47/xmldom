@@ -28,6 +28,13 @@ export abstract class DummyNode implements Node {
   abstract PROCESSING_INSTRUCTION_NODE: number;
   abstract TEXT_NODE: number;
 
+  abstract DOCUMENT_POSITION_CONTAINED_BY: number;
+  abstract DOCUMENT_POSITION_CONTAINS: number;
+  abstract DOCUMENT_POSITION_DISCONNECTED: number;
+  abstract DOCUMENT_POSITION_FOLLOWING: number;
+  abstract DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC: number;
+  abstract DOCUMENT_POSITION_PRECEDING: number;
+
   abstract addObserver(observer: MutationObserver, options: MutationObserverInit): boolean;
   abstract delObserver(observer: MutationObserver): void;
 
@@ -111,49 +118,6 @@ export abstract class DummyNode implements Node {
   }
   replaceChild<T extends Node>(_newChild: Node, _oldChild: T): T {
     throw new Error('Method not implemented.');
-  }
-
-  static get DOCUMENT_POSITION_CONTAINED_BY(): number {
-    throw new Error('Property not implemented.');
-  }
-
-  static get DOCUMENT_POSITION_CONTAINS(): number {
-    throw new Error('Property not implemented.');
-  }
-
-  static get DOCUMENT_POSITION_DISCONNECTED(): number {
-    throw new Error('Property not implemented.');
-  }
-
-  static get DOCUMENT_POSITION_FOLLOWING(): number {
-    throw new Error('Property not implemented.');
-  }
-
-  static get DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC(): number {
-    throw new Error('Property not implemented.');
-  }
-
-  static get DOCUMENT_POSITION_PRECEDING(): number {
-    throw new Error('Property not implemented.');
-  }
-
-  get DOCUMENT_POSITION_CONTAINED_BY(): number {
-    throw new Error('Property not implemented.');
-  }
-  get DOCUMENT_POSITION_CONTAINS(): number {
-    throw new Error('Property not implemented.');
-  }
-  get DOCUMENT_POSITION_DISCONNECTED(): number {
-    throw new Error('Property not implemented.');
-  }
-  get DOCUMENT_POSITION_FOLLOWING(): number {
-    throw new Error('Property not implemented.');
-  }
-  get DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC(): number {
-    throw new Error('Property not implemented.');
-  }
-  get DOCUMENT_POSITION_PRECEDING(): number {
-    throw new Error('Property not implemented.');
   }
 
   addEventListener(

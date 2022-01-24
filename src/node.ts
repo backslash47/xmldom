@@ -9,6 +9,7 @@ import { cloneNode } from './node-utils';
 import { serializeToString } from './serializer/serialize';
 import { NodeFilterTS, RegisteredObserver, VisibleNamespaces } from './types';
 import { asChildNode, isAttr, isDocument, isElement, isText } from './utils';
+import { DocumentPositionTS } from './document-position';
 
 /**
  * @see http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/core.html#ID-1950641247
@@ -40,6 +41,20 @@ export class NodeImpl extends DummyNode {
   readonly DOCUMENT_TYPE_NODE = NodeTypeTS.DOCUMENT_TYPE_NODE;
   readonly DOCUMENT_FRAGMENT_NODE = NodeTypeTS.DOCUMENT_FRAGMENT_NODE;
   readonly NOTATION_NODE = NodeTypeTS.NOTATION_NODE;
+
+  static readonly DOCUMENT_POSITION_CONTAINED_BY = DocumentPositionTS.CONTAINED_BY;
+  static readonly DOCUMENT_POSITION_CONTAINS = DocumentPositionTS.CONTAINS;
+  static readonly DOCUMENT_POSITION_DISCONNECTED = DocumentPositionTS.DISCONNECTED;
+  static readonly DOCUMENT_POSITION_FOLLOWING = DocumentPositionTS.FOLLOWING;
+  static readonly DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = DocumentPositionTS.IMPLEMENTATION_SPECIFIC;
+  static readonly DOCUMENT_POSITION_PRECEDING = DocumentPositionTS.PRECEDING;
+
+  readonly DOCUMENT_POSITION_CONTAINED_BY = DocumentPositionTS.CONTAINED_BY;
+  readonly DOCUMENT_POSITION_CONTAINS = DocumentPositionTS.CONTAINS;
+  readonly DOCUMENT_POSITION_DISCONNECTED = DocumentPositionTS.DISCONNECTED;
+  readonly DOCUMENT_POSITION_FOLLOWING = DocumentPositionTS.FOLLOWING;
+  readonly DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = DocumentPositionTS.IMPLEMENTATION_SPECIFIC;
+  readonly DOCUMENT_POSITION_PRECEDING = DocumentPositionTS.PRECEDING;
 
   observers: RegisteredObserver[] = [];
 
