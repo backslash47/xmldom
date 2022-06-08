@@ -34,6 +34,7 @@ export {
   TextImpl,
 };
 
+/*
 if (globalThis) {
   globalThis.XMLSerializer = XMLSerializerImpl;
   globalThis.DOMImplementation = DOMImplementationImpl;
@@ -54,3 +55,4 @@ if (globalThis) {
 
   globalThis.MutationObserver = MutationObserverImpl;
 }
+*/
