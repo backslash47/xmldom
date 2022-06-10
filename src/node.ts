@@ -319,7 +319,7 @@ export class NodeImpl extends DummyNode {
     }
 
     const node = _nodes[0];
-    if (!(node instanceof Node)) {
+    if (!(node instanceof NodeImpl)) {
       throw new Error('Method not implemented.');
     }
 
@@ -335,7 +335,7 @@ export class NodeImpl extends DummyNode {
     let node: Node | null = this;
 
     while (node != null) {
-      if (node instanceof Document) {
+      if (isDocument(node)) {
         return true;
       } else {
         node = node.parentNode;
